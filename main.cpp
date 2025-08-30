@@ -1,86 +1,92 @@
 #include <SFML/Graphics.hpp>
 #include <optional>
 #include "constants.hpp"
+#include "CelestialBody.hpp"
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({1600, 1000}), "SMFL");
+    sf::RenderWindow window(sf::VideoMode({1600, 1000}), "Solar System");
+
     sf::Texture backgroundTexture;
     if (!backgroundTexture.loadFromFile("Textures/8k_stars.jpg")) {
         return -1;
     }
-    sf::Sprite backgroundSprite(backgroundTexture);
+    sf::Sprite backgroundSprite(backgroundTexture)
+    ;
+    sf::Vector2f sunPos = {600, 400};
 
-    // Sun
-    sf::CircleShape sun(Constants::SunRadius * Constants::SUN_RADIUS_SCALE);
-    sun.setFillColor(Constants::SunColor);
-    sun.setOrigin({sun.getRadius(), sun.getRadius()});
-    sun.setPosition({600, 400}); // center of screen
+    // Create all planets using CelestialBody
+    CelestialBody sun(Constants::SunRadius, Constants::SunColor, 0, 0, Constants::SUN_RADIUS_SCALE);
 
-    // Mercury
-    sf::CircleShape mercury(Constants::MercuryRadius * Constants::SCALE_RADIUS);
-    mercury.setFillColor(Constants::MercuryColor);
-    mercury.setOrigin({mercury.getRadius(), mercury.getRadius()});
-    mercury.setPosition({600 + Constants::MercuryOrbit * Constants::SCALE_DISTANCE, 400});
+    CelestialBody mercury(Constants::MercuryRadius, Constants::MercuryColor, Constants::MercuryOrbit, 4.0f, Constants::SCALE_RADIUS);
 
-    // Venus
-    sf::CircleShape venus(Constants::VenusRadius * Constants::SCALE_RADIUS);
-    venus.setFillColor(Constants::VenusColor);
-    venus.setOrigin({venus.getRadius(), venus.getRadius()});
-    venus.setPosition({600 + Constants::VenusOrbit * Constants::SCALE_DISTANCE, 400});
+    CelestialBody venus(Constants::VenusRadius, Constants::VenusColor, Constants::VenusOrbit, 1.6f, Constants::SCALE_RADIUS);
 
-    // Earth
-    sf::CircleShape earth(Constants::EarthRadius * Constants::SCALE_RADIUS);
-    earth.setFillColor(Constants::EarthColor);
-    earth.setOrigin({earth.getRadius(), earth.getRadius()});
-    earth.setPosition({600 + Constants::EarthOrbit * Constants::SCALE_DISTANCE, 400});
+    CelestialBody earth(Constants::EarthRadius, Constants::EarthColor, Constants::EarthOrbit, 1.0f, Constants::SCALE_RADIUS);
 
-    // Mars
-    sf::CircleShape mars(Constants::MarsRadius * Constants::SCALE_RADIUS);
-    mars.setFillColor(Constants::MarsColor);
-    mars.setOrigin({mars.getRadius(), mars.getRadius()});
-    mars.setPosition({600 + Constants::MarsOrbit * Constants::SCALE_DISTANCE, 400});
+    CelestialBody mars(Constants::MarsRadius, Constants::MarsColor, Constants::MarsOrbit, 0.5f, Constants::SCALE_RADIUS);
 
-    // Jupiter
-    sf::CircleShape jupiter(Constants::JupiterRadius * Constants::SCALE_RADIUS);
-    jupiter.setFillColor(Constants::JupiterColor);
-    jupiter.setOrigin({jupiter.getRadius(), jupiter.getRadius()});
-    jupiter.setPosition({600 + Constants::JupiterOrbit * Constants::SCALE_DISTANCE, 400});
+    CelestialBody jupiter(Constants::JupiterRadius, Constants::JupiterColor, Constants::JupiterOrbit, 0.08f, Constants::SCALE_RADIUS);
 
-    // Saturn
-    sf::CircleShape saturn(Constants::SaturnRadius * Constants::SCALE_RADIUS);
-    saturn.setFillColor(Constants::SaturnColor);
-    saturn.setOrigin({saturn.getRadius(), saturn.getRadius()});
-    saturn.setPosition({600 + Constants::SaturnOrbit * Constants::SCALE_DISTANCE, 400});
+    CelestialBody saturn(Constants::SaturnRadius, Constants::SaturnColor, Constants::SaturnOrbit, 0.03f, Constants::SCALE_RADIUS);
 
-    // Uranus
-    sf::CircleShape uranus(Constants::UranusRadius * Constants::SCALE_RADIUS);
-    uranus.setFillColor(Constants::UranusColor);
-    uranus.setOrigin({uranus.getRadius(), uranus.getRadius()});
-    uranus.setPosition({600 + Constants::UranusOrbit * Constants::SCALE_DISTANCE, 400});
+    CelestialBody uranus(Constants::UranusRadius, Constants::UranusColor, Constants::UranusOrbit, 0.01f, Constants::SCALE_RADIUS);
 
-    // Neptune
-    sf::CircleShape neptune(Constants::NeptuneRadius * Constants::SCALE_RADIUS);
-    neptune.setFillColor(Constants::NeptuneColor);
-    neptune.setOrigin({neptune.getRadius(), neptune.getRadius()});
-    neptune.setPosition({600 + Constants::NeptuneOrbit * Constants::SCALE_DISTANCE, 400});
+    CelestialBody neptune(Constants::NeptuneRadius, Constants::NeptuneColor, Constants::NeptuneOrbit, 0.006f, Constants::SCALE_RADIUS);
+
+    // Set initial positions
+    sun.updatePosition(sunPos);
+    mercury.updatePosition(sunPos);
+    venus.updatePosition(sunPos);
+    earth.updatePosition(sunPos);
+    mars.updatePosition(sunPos);
+    jupiter.updatePosition(sunPos);
+    saturn.updatePosition(sunPos);
+    uranus.updatePosition(sunPos);
+    neptune.updatePosition(sunPos);
+
+    sf::Clock clock;
         
     while (window.isOpen()) {
+        float deltaTime = clock.restart().asSeconds();
         while (auto event = window.pollEvent()) {
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
+
+        // Update orbits (sun doesn't orbit, so skip it)
+        mercury.updateOrbit(deltaTime);
+        venus.updateOrbit(deltaTime);
+        earth.updateOrbit(deltaTime);
+        mars.updateOrbit(deltaTime);
+        jupiter.updateOrbit(deltaTime);
+        saturn.updateOrbit(deltaTime);
+        uranus.updateOrbit(deltaTime);
+        neptune.updateOrbit(deltaTime);
+
+        // Update positions
+        mercury.updatePosition(sunPos);
+        venus.updatePosition(sunPos);
+        earth.updatePosition(sunPos);
+        mars.updatePosition(sunPos);
+        jupiter.updatePosition(sunPos);
+        saturn.updatePosition(sunPos);
+        uranus.updatePosition(sunPos);
+        neptune.updatePosition(sunPos);
         
         window.clear();
         window.draw(backgroundSprite);
-        window.draw(sun);
-        window.draw(mercury);
-        window.draw(venus);
-        window.draw(earth);
-        window.draw(mars);
-        window.draw(jupiter);
-        window.draw(saturn);
-        window.draw(uranus);
-        window.draw(neptune);
+
+        // Use draw() method for CelestialBody objects
+        sun.draw(window);
+        mercury.draw(window);
+        venus.draw(window);
+        earth.draw(window);
+        mars.draw(window);
+        jupiter.draw(window);
+        saturn.draw(window);
+        uranus.draw(window);
+        neptune.draw(window);
+        
         window.display();
     }
 }
