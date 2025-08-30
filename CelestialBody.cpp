@@ -1,6 +1,8 @@
 #include "CelestialBody.hpp"
 #include "constants.hpp" // your constants file
 #include <cmath>
+#include "Camera.hpp"
+
 
 CelestialBody::CelestialBody(float radius, sf::Color color, float orbit, float speed, float radiusScale) 
     : orbitDistance(orbit * Constants::SCALE_DISTANCE), 
@@ -37,4 +39,18 @@ sf::Vector2f CelestialBody::getPosition() const {
 
 float CelestialBody::getRadius() const {
     return shape.getRadius();
+}
+void CelestialBody::drawWithCamera(sf::RenderWindow& window, const Camera& camera) {
+    sf::Vector2f screenPos = camera.worldToScreen(shape.getPosition());
+    
+    // Create a temporary shape for drawing at screen position
+    sf::CircleShape tempShape = shape;
+    tempShape.setPosition(screenPos);
+    
+    // Scale radius by zoom level
+    float screenRadius = shape.getRadius() * camera.getZoom();
+    tempShape.setRadius(screenRadius);
+    tempShape.setOrigin(sf::Vector2f(screenRadius, screenRadius));
+    
+    window.draw(tempShape);
 }

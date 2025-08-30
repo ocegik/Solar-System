@@ -2,6 +2,7 @@
 #include <optional>
 #include "constants.hpp"
 #include "CelestialBody.hpp"
+#include "Camera.hpp"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({1600, 1000}), "Solar System");
@@ -12,7 +13,8 @@ int main() {
     }
     sf::Sprite backgroundSprite(backgroundTexture)
     ;
-    sf::Vector2f sunPos = {600, 400};
+    Camera camera(window.getSize(), sf::Vector2f(0, 0), 0.1f);
+    sf::Vector2f sunPos = {0, 0};
 
     // Create all planets using CelestialBody
     CelestialBody sun(Constants::SunRadius, Constants::SunColor, 0, 0, Constants::SUN_RADIUS_SCALE);
@@ -48,45 +50,87 @@ int main() {
         
     while (window.isOpen()) {
         float deltaTime = clock.restart().asSeconds();
+
         while (auto event = window.pollEvent()) {
-            if (event->is<sf::Event::Closed>())
+            if (event->is<sf::Event::Closed>()) {
                 window.close();
+            }
+            else if (auto* key = event->getIf<sf::Event::KeyPressed>()) {
+                float moveSpeed = 20.0f / camera.getZoom();
+                
+                if (key->code == sf::Keyboard::Key::Left || key->code == sf::Keyboard::Key::A) {
+                    camera.move(sf::Vector2f(-moveSpeed, 0));
+                }
+                else if (key->code == sf::Keyboard::Key::Right || key->code == sf::Keyboard::Key::D) {
+                    camera.move(sf::Vector2f(moveSpeed, 0));
+                }
+                else if (key->code == sf::Keyboard::Key::Up || key->code == sf::Keyboard::Key::W) {
+                    camera.move(sf::Vector2f(0, -moveSpeed));
+                }
+                else if (key->code == sf::Keyboard::Key::Down || key->code == sf::Keyboard::Key::S) {
+                    camera.move(sf::Vector2f(0, moveSpeed));
+                }
+
+                // Zoom
+                else if (key->code == sf::Keyboard::Key::Q) {
+                    camera.setZoom(camera.getZoom() * 1.3f);  // Zoom in
+                }
+                else if (key->code == sf::Keyboard::Key::E) {
+                    camera.setZoom(camera.getZoom() * 0.7f);  // Zoom out
+                }
+
+                // Quick presets
+                else if (key->code == sf::Keyboard::Key::Num1) {
+                    camera.setZoom(0.01f);  // Full solar system view
+                }
+                else if (key->code == sf::Keyboard::Key::Num2) {
+                    camera.setZoom(0.1f);   // Inner planets view
+                }
+                else if (key->code == sf::Keyboard::Key::Num3) {
+                    camera.setZoom(1.0f);   // Close-up view
+                }
+                
+                // Center on sun
+                else if (key->code == sf::Keyboard::Key::Space) {
+                    camera.setPosition(sf::Vector2f(0, 0));
+                }
+            }
         }
 
-        // Update orbits (sun doesn't orbit, so skip it)
-        mercury.updateOrbit(deltaTime);
-        venus.updateOrbit(deltaTime);
-        earth.updateOrbit(deltaTime);
-        mars.updateOrbit(deltaTime);
-        jupiter.updateOrbit(deltaTime);
-        saturn.updateOrbit(deltaTime);
-        uranus.updateOrbit(deltaTime);
-        neptune.updateOrbit(deltaTime);
+    // Update orbits (sun doesn't orbit, so skip it)
+    mercury.updateOrbit(deltaTime);
+    venus.updateOrbit(deltaTime);
+    earth.updateOrbit(deltaTime);
+    mars.updateOrbit(deltaTime);
+    jupiter.updateOrbit(deltaTime);
+    saturn.updateOrbit(deltaTime);
+    uranus.updateOrbit(deltaTime);
+    neptune.updateOrbit(deltaTime);
 
-        // Update positions
-        mercury.updatePosition(sunPos);
-        venus.updatePosition(sunPos);
-        earth.updatePosition(sunPos);
-        mars.updatePosition(sunPos);
-        jupiter.updatePosition(sunPos);
-        saturn.updatePosition(sunPos);
-        uranus.updatePosition(sunPos);
-        neptune.updatePosition(sunPos);
-        
-        window.clear();
-        window.draw(backgroundSprite);
+    // Update positions
+    mercury.updatePosition(sunPos);
+    venus.updatePosition(sunPos);
+    earth.updatePosition(sunPos);
+    mars.updatePosition(sunPos);
+    jupiter.updatePosition(sunPos);
+    saturn.updatePosition(sunPos);
+    uranus.updatePosition(sunPos);
+    neptune.updatePosition(sunPos);
+    
+    window.clear();
+    window.draw(backgroundSprite);
 
-        // Use draw() method for CelestialBody objects
-        sun.draw(window);
-        mercury.draw(window);
-        venus.draw(window);
-        earth.draw(window);
-        mars.draw(window);
-        jupiter.draw(window);
-        saturn.draw(window);
-        uranus.draw(window);
-        neptune.draw(window);
-        
-        window.display();
+    // Use draw() method for CelestialBody objects
+    sun.drawWithCamera(window, camera);
+    mercury.drawWithCamera(window, camera);
+    venus.drawWithCamera(window, camera);
+    earth.drawWithCamera(window, camera);
+    mars.drawWithCamera(window, camera);
+    jupiter.drawWithCamera(window, camera);
+    saturn.drawWithCamera(window, camera);
+    uranus.drawWithCamera(window, camera);
+    neptune.drawWithCamera(window, camera);
+    
+    window.display();
     }
 }

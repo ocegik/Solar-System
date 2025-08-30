@@ -1,5 +1,5 @@
 #!/bin/zsh
-clang++ main.cpp CelestialBody.cpp -o solar-system \
+clang++ main.cpp CelestialBody.cpp Camera.cpp -o solar-system \
   -I/opt/homebrew/include \
   -L/opt/homebrew/lib \
   -lsfml-graphics -lsfml-window -lsfml-system \
