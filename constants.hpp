@@ -2,6 +2,8 @@
 #pragma once
 #include <SFML/Graphics/Color.hpp>
 
+
+
 namespace Constants {
     // Universal constants
     constexpr double G = 6.67430e-11;   // Gravitational constant
@@ -10,6 +12,18 @@ namespace Constants {
 
     constexpr double SCALE_RADIUS = 5e-4;   // shrink planets more
     constexpr double SUN_RADIUS_SCALE = 1e-4; // extra shrink just for Sun
+
+    namespace Textures {
+        const std::string SUN_TEXTURE     = "Textures/2k_sun.jpg";
+        const std::string MERCURY_TEXTURE = "Textures/2k_mercury.jpg";
+        const std::string VENUS_TEXTURE   = "Textures/2k_venus_surface.jpg";
+        const std::string EARTH_TEXTURE   = "Textures/2k_earth_daymap.jpg";
+        const std::string MARS_TEXTURE    = "Textures/2k_mars.jpg";
+        const std::string JUPITER_TEXTURE = "Textures/2k_jupiter.jpg";
+        const std::string SATURN_TEXTURE  = "Textures/2k_saturn.jpg";
+        const std::string URANUS_TEXTURE  = "Textures/2k_uranus.jpg";
+        const std::string NEPTUNE_TEXTURE = "Textures/2k_neptune.jpg";
+    }
 
 
     // Sun

@@ -3,6 +3,7 @@
 #include "constants.hpp"
 #include "CelestialBody.hpp"
 #include "Camera.hpp"
+#include "TextureManager.hpp"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({1600, 1000}), "Solar System");
@@ -16,24 +17,28 @@ int main() {
     Camera camera(window.getSize(), sf::Vector2f(0, 0), 0.1f);
     sf::Vector2f sunPos = {0, 0};
 
+    TextureManager textureManager;
+    textureManager.loadAllPlanetTextures();
+
     // Create all planets using CelestialBody
-    CelestialBody sun(Constants::SunRadius, Constants::SunColor, 0, 0, Constants::SUN_RADIUS_SCALE);
 
-    CelestialBody mercury(Constants::MercuryRadius, Constants::MercuryColor, Constants::MercuryOrbit, 4.0f, Constants::SCALE_RADIUS);
+    CelestialBody sun(Constants::SunRadius, Constants::SunColor, 0, 0, Constants::SUN_RADIUS_SCALE, "sun");
 
-    CelestialBody venus(Constants::VenusRadius, Constants::VenusColor, Constants::VenusOrbit, 1.6f, Constants::SCALE_RADIUS);
+    CelestialBody mercury(Constants::MercuryRadius, Constants::MercuryColor, Constants::MercuryOrbit, 4.0f, Constants::SCALE_RADIUS, "mercury");
 
-    CelestialBody earth(Constants::EarthRadius, Constants::EarthColor, Constants::EarthOrbit, 1.0f, Constants::SCALE_RADIUS);
+    CelestialBody venus(Constants::VenusRadius, Constants::VenusColor, Constants::VenusOrbit, 1.6f, Constants::SCALE_RADIUS, "venus");
 
-    CelestialBody mars(Constants::MarsRadius, Constants::MarsColor, Constants::MarsOrbit, 0.5f, Constants::SCALE_RADIUS);
+    CelestialBody earth(Constants::EarthRadius, Constants::EarthColor, Constants::EarthOrbit, 1.0f, Constants::SCALE_RADIUS, "earth");
 
-    CelestialBody jupiter(Constants::JupiterRadius, Constants::JupiterColor, Constants::JupiterOrbit, 0.08f, Constants::SCALE_RADIUS);
+    CelestialBody mars(Constants::MarsRadius, Constants::MarsColor, Constants::MarsOrbit, 0.5f, Constants::SCALE_RADIUS, "mars");
 
-    CelestialBody saturn(Constants::SaturnRadius, Constants::SaturnColor, Constants::SaturnOrbit, 0.03f, Constants::SCALE_RADIUS);
+    CelestialBody jupiter(Constants::JupiterRadius, Constants::JupiterColor, Constants::JupiterOrbit, 0.08f, Constants::SCALE_RADIUS, "jupiter");
 
-    CelestialBody uranus(Constants::UranusRadius, Constants::UranusColor, Constants::UranusOrbit, 0.01f, Constants::SCALE_RADIUS);
+    CelestialBody saturn(Constants::SaturnRadius, Constants::SaturnColor, Constants::SaturnOrbit, 0.03f, Constants::SCALE_RADIUS, "saturn");
 
-    CelestialBody neptune(Constants::NeptuneRadius, Constants::NeptuneColor, Constants::NeptuneOrbit, 0.006f, Constants::SCALE_RADIUS);
+    CelestialBody uranus(Constants::UranusRadius, Constants::UranusColor, Constants::UranusOrbit, 0.01f, Constants::SCALE_RADIUS, "uranus");
+
+    CelestialBody neptune(Constants::NeptuneRadius, Constants::NeptuneColor, Constants::NeptuneOrbit, 0.006f, Constants::SCALE_RADIUS, "neptune");
 
     // Set initial positions
     sun.updatePosition(sunPos);
@@ -94,6 +99,18 @@ int main() {
                 else if (key->code == sf::Keyboard::Key::Space) {
                     camera.setPosition(sf::Vector2f(0, 0));
                 }
+
+                else if (key->code == sf::Keyboard::Key::T) {
+                    sun.setUseTexture(!sun.isUsingTexture());
+                    mercury.setUseTexture(!mercury.isUsingTexture());
+                    venus.setUseTexture(!venus.isUsingTexture());
+                    earth.setUseTexture(!earth.isUsingTexture());
+                    mars.setUseTexture(!mars.isUsingTexture());
+                    jupiter.setUseTexture(!jupiter.isUsingTexture());
+                    saturn.setUseTexture(!saturn.isUsingTexture());
+                    uranus.setUseTexture(!uranus.isUsingTexture());
+                    neptune.setUseTexture(!neptune.isUsingTexture());
+                }
             }
         }
 
@@ -121,15 +138,15 @@ int main() {
     window.draw(backgroundSprite);
 
     // Use draw() method for CelestialBody objects
-    sun.drawWithCamera(window, camera);
-    mercury.drawWithCamera(window, camera);
-    venus.drawWithCamera(window, camera);
-    earth.drawWithCamera(window, camera);
-    mars.drawWithCamera(window, camera);
-    jupiter.drawWithCamera(window, camera);
-    saturn.drawWithCamera(window, camera);
-    uranus.drawWithCamera(window, camera);
-    neptune.drawWithCamera(window, camera);
+    sun.drawWithCamera(window, camera, textureManager);
+    mercury.drawWithCamera(window, camera, textureManager);
+    venus.drawWithCamera(window, camera, textureManager);
+    earth.drawWithCamera(window, camera, textureManager);
+    mars.drawWithCamera(window, camera, textureManager);
+    jupiter.drawWithCamera(window, camera, textureManager);
+    saturn.drawWithCamera(window, camera, textureManager);
+    uranus.drawWithCamera(window, camera, textureManager);
+    neptune.drawWithCamera(window, camera, textureManager);
     
     window.display();
     }
