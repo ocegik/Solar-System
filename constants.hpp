@@ -8,10 +8,10 @@ namespace Constants {
     // Universal constants
     constexpr double G = 6.67430e-11;   // Gravitational constant
     constexpr double SCALE_DISTANCE = 1.0e-6; // To shrink km → pixels
-    constexpr double TIME_STEP      = 60.0 * 60.0; // 1 hour per frame (seconds)
+    constexpr double TIME_STEP      = 600; // 1 hour per frame (seconds)
 
-    constexpr double SCALE_RADIUS = 5e-4;   // shrink planets more
-    constexpr double SUN_RADIUS_SCALE = 1e-4; // extra shrink just for Sun
+    constexpr double SCALE_RADIUS = 2e-3;   
+    constexpr double SUN_RADIUS_SCALE = 1e-4; 
 
     namespace Textures {
         const std::string SUN_TEXTURE     = "Textures/2k_sun.jpg";
